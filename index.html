@@ -1,0 +1,90 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>prueba</title>
+    <script src="./js/phaser.js"></script>
+</head>
+<body>
+    <script>
+        window.onload = ()=>{
+            var game = new Phaser.Game(800,600,Phaser.CANVAS,'game',{preload :preload,create:create,update:update});
+            var teclado;
+            var player;
+            var at;
+            function preload(){
+                game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+                
+                game.scale.minWidth = 240;
+                game.scale.minHeight = 170;
+                game.scale.maxWidth = 1080;
+                game.scale.maxHeight = 720;
+                game.scale.pageAlignHorizontally = true;
+                //game.scale.setScreenSize(true); automatico
+                //loading images
+                //game.load.image('player','./img/player.png') */
+                game.load.image('background','./img/fondo.jpg')
+                game.load.spritesheet('playerImg','img/player1.png',24,32,24)
+
+                /*Loading Keyboard
+                teclado = game.input.keyboard.createCursorKeys() me crea un teclado con las teclas de movimiento basicas*/
+                teclado = game.input.keyboard.addKeys({ 'up': Phaser.KeyCode.UP, 'down': Phaser.KeyCode.DOWN, 'left': Phaser.KeyCode.LEFT, 'right': Phaser.KeyCode.RIGHT ,'q':Phaser.KeyCode.Q});
+                
+            };
+            function  create(){
+                var texto = "prueba";
+                var style = {font :"40px Arial",align:"center",fill : "white"};
+                
+                game.stage.backgroundColor = "black";
+                //game.add.image(0,0,'background')
+                //game.add.image(300,400,'player')
+                //adding player
+                player = game.add.sprite(300,400,'playerImg')
+                player.animations.add('all')
+                player.animations.add('right',[3,4,5])
+                player.animations.add('left',[9,10,11])
+                player.animations.add('top',[0,1,2])
+                player.animations.add('down',[6,7,8])
+                player.animations.add('startR',[3])
+                player.animations.add('startL',[9])
+                player.animations.add('startT',[0])
+                player.animations.add('startD',[6])
+                player.animations.add('attack',[15,16,17,3])
+                /* para cargar centro del juego game.world.centerX or centerY
+                var textshow = game.add.text(game.world.centerX,150,texto,style);
+                textshow.anchor.setTo(0.5,0.5); */
+                player.animations.play('startR',5,true);
+                
+
+                game.physics.startSystem(Phaser.Physics.ARCADE)
+                game.physics.arcade.enable(player)
+            };
+            function update() {
+                if(teclado.left.isDown){
+                    player.body.x -=1;
+                    player.animations.play('left',5,true);
+                }
+                else if(teclado.right.isDown){
+                    player.body.x+=1;
+                    player.animations.play('right',5,true);
+                }
+                else
+                    player.body.velocity.x=0;
+                
+                if(teclado.up.isDown){
+                    player.body.y-=1;
+                    player.animations.play('top',5,true);
+                }else if(teclado.down.isDown){
+                    player.body.y+=1;
+                    player.animations.play('down',5,true);
+                }else
+                    player.body.velocity.y=0;
+                if(teclado.q.isDown){
+                    player.animations.play('attack',5,false);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
